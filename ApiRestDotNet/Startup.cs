@@ -1,3 +1,4 @@
+using System;
 using ApiRestDotNet.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -29,6 +30,8 @@ namespace ApiRestDotNet
             {
                 c.SwaggerDoc("v1", new OpenApiInfo {Title = "ApiRestDotNet", Version = "v1"});
             });
+
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

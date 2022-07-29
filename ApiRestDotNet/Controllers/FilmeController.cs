@@ -1,7 +1,8 @@
-using System.Collections.Generic;
 using System.Linq;
 using ApiRestDotNet.Data;
+using ApiRestDotNet.Data.Dtos;
 using ApiRestDotNet.Models;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ApiRestDotNet.Controllers
@@ -11,18 +12,21 @@ namespace ApiRestDotNet.Controllers
     public class FilmeController : ControllerBase
     {
         private readonly FilmeContext _context;
+        private readonly IMapper _mapper;
 
-        public FilmeController(FilmeContext context)
+        public FilmeController(FilmeContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
         [HttpPost]
-        public IActionResult AdicionaFilme([FromBody] Filme filme)
+        public IActionResult AdicionaFilme([FromBody] CreateFilmeDto filmeDto)
         {
+            var filme = _mapper.Map<Filme>(filmeDto);
             _context.Filmes.Add(filme);
             _context.SaveChanges();
-            return CreatedAtAction(nameof(RecuperaFilmesPorId), new { Id = filme.Id }, filme);
+            return CreatedAtAction(nameof(RecuperaFilmesPorId), new { filme.Id }, filme);
         }
 
         [HttpGet]
@@ -35,23 +39,22 @@ namespace ApiRestDotNet.Controllers
         public IActionResult RecuperaFilmesPorId(int id)
         {
             var filme = _context.Filmes.FirstOrDefault(f => f.Id == id);
-            return filme == default 
-                ? NotFound()
-                : Ok(filme);
+            if (filme == default)
+                return NotFound();
+            
+            var filmeDto = _mapper.Map<ReadFilmeDto>(filme);
+            return Ok(filmeDto);
         }
 
         [HttpPut("{id:int}")]
-        public IActionResult AtualizaFilme(int id, [FromBody]Filme filme)
+        public IActionResult AtualizaFilme(int id, [FromBody]UpdateFilmeDto filmeDto)
         {
-            var filmeOriginal = _context.Filmes.FirstOrDefault(f => f.Id == id);
+            var filme = _context.Filmes.FirstOrDefault(f => f.Id == id);
 
-            if (filmeOriginal == null)
+            if (filme == null)
                 return NotFound();
 
-            filmeOriginal.Titulo = filme.Titulo;
-            filmeOriginal.Genero = filme.Genero;
-            filmeOriginal.Duracao = filme.Duracao;
-            filmeOriginal.Diretor = filme.Diretor;
+            _mapper.Map(filmeDto, filme);
             _context.SaveChanges();
             return NoContent();
         }
