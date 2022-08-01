@@ -24,9 +24,9 @@ namespace ApiRestDotNet.Controllers
   
 
         [HttpPost]
-        public IActionResult AdicionaEndereco([FromBody] CreateEnderecoDto cinemaDto)
+        public IActionResult AdicionaEndereco([FromBody] CreateEnderecoDto enderecoDto)
         {
-            var endereco = _mapper.Map<Endereco>(cinemaDto);
+            var endereco = _mapper.Map<Endereco>(enderecoDto);
             _context.Enderecos.Add(endereco);
             _context.SaveChanges();
             return CreatedAtAction(nameof(RecuperaEnderecoPorId), new { Id = endereco.Id }, endereco);
