@@ -20,7 +20,7 @@ namespace ApiRestDotNet.Controllers
             _mapper = mapper;
         }
 
-        [HttpGet]
+        [HttpPost]
         public IActionResult AdicionaGerente(CreateGerenteDto dto)
         {
             var gerente = _mapper.Map<Gerente>(dto);

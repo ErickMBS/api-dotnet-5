@@ -1,4 +1,4 @@
-using System.ComponentModel.DataAnnotations;
+using System.Collections.Generic;
 
 namespace ApiRestDotNet.Data.Dtos.Gerente
 {
@@ -6,5 +6,6 @@ namespace ApiRestDotNet.Data.Dtos.Gerente
     {
         public int Id { get; set; }
         public string Nome { get; set; }
+        public List<Models.Cinema> Cinemas { get; set; }
     }
 }
