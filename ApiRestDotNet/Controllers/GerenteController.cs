@@ -39,5 +39,18 @@ namespace ApiRestDotNet.Controllers
             var gerenteDto = _mapper.Map<ReadGerenteDto>(gerente);
             return Ok(gerenteDto);
         }
+        
+        [HttpDelete("{id:int}")]
+        public IActionResult DeletaGerente(int id)
+        {
+            var gerente = _context.Gerentes.FirstOrDefault(g => g.Id == id);
+
+            if (gerente == null)
+                return NotFound();
+            
+            _context.Remove(gerente);
+            _context.SaveChanges();
+            return NoContent();
+        }
     }
 }
