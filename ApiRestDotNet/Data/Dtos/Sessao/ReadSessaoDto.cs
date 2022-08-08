@@ -9,5 +9,6 @@ namespace ApiRestDotNet.Data.Dtos.Sessao
         public Filme Filme { get; set; }
         public Models.Cinema Cinema { get; set; }
         public DateTime HorarioDeEncerramento { get; set; }
+        public DateTime HorarioDeInicio { get; set; }
     }
 }

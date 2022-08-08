@@ -9,7 +9,12 @@ namespace ApiRestDotNet.Profiles
         public SessaoProfile()
         {
             CreateMap<CreateSessaoDto, Sessao>();
-            CreateMap<Sessao, ReadSessaoDto>();
+            CreateMap<Sessao, ReadSessaoDto>()
+                .ForMember(dto => dto.HorarioDeInicio, opts => opts
+                    .MapFrom(dto => 
+                        dto.HorarioDeEncerramento.AddMinutes(dto.Filme.Duracao * (-1))
+                    )
+                );
         }
     }
 }
