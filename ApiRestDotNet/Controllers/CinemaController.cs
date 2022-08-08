@@ -12,47 +12,59 @@ namespace ApiRestDotNet.Controllers
     [Route("[controller]")]
     public class CinemaController : ControllerBase
     {
-        private AppDbContext _context;
-        private IMapper _mapper;
+        private readonly AppDbContext _context;
+        private readonly IMapper _mapper;
 
         public CinemaController(AppDbContext context, IMapper mapper)
         {
             _context = context;
             _mapper = mapper;
         }
-  
 
         [HttpPost]
         public IActionResult AdicionaCinema([FromBody] CreateCinemaDto cinemaDto)
         {
-            Cinema cinema = _mapper.Map<Cinema>(cinemaDto);
+            var cinema = _mapper.Map<Cinema>(cinemaDto);
             _context.Cinemas.Add(cinema);
             _context.SaveChanges();
             return CreatedAtAction(nameof(RecuperaCinemasPorId), new { Id = cinema.Id }, cinema);
         }
 
         [HttpGet]
-        public IEnumerable<Cinema> RecuperaCinemas([FromQuery] string nomeDoFilme)
+        public IActionResult RecuperaCinemas([FromQuery] string nomeDoFilme)
         {
-            return _context.Cinemas;
+            var cinemas = _context.Cinemas.ToList();
+            if (!cinemas.Any())
+                return NotFound();
+
+            if (!string.IsNullOrWhiteSpace(nomeDoFilme))
+            {
+                var query = from cinema in cinemas 
+                    where cinema.Sessoes.Any(sessao => 
+                        sessao.Filme.Titulo == nomeDoFilme
+                    )
+                    select cinema;
+                cinemas = query.ToList();
+            }
+
+            var readDto = _mapper.Map<List<ReadCinemaDto>>(cinemas);
+            return Ok(readDto);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{id:int}")]
         public IActionResult RecuperaCinemasPorId(int id)
         {
-            Cinema cinema = _context.Cinemas.FirstOrDefault(cinema => cinema.Id == id);
-            if(cinema != null)
-            {
-                ReadCinemaDto cinemaDto = _mapper.Map<ReadCinemaDto>(cinema);
-                return Ok(cinemaDto);
-            }
-            return NotFound();
+            var cinema = _context.Cinemas.FirstOrDefault(cinema => cinema.Id == id);
+            if (cinema == null) 
+                return NotFound();
+            var cinemaDto = _mapper.Map<ReadCinemaDto>(cinema);
+            return Ok(cinemaDto);
         }
 
-        [HttpPut("{id}")]
+        [HttpPut("{id:int}")]
         public IActionResult AtualizaCinema(int id, [FromBody] UpdateCinemaDto cinemaDto)
         {
-            Cinema cinema = _context.Cinemas.FirstOrDefault(cinema => cinema.Id == id);
+            var cinema = _context.Cinemas.FirstOrDefault(cinema => cinema.Id == id);
             if(cinema == null)
             {
                 return NotFound();
@@ -62,11 +74,10 @@ namespace ApiRestDotNet.Controllers
             return NoContent();
         }
 
-
-        [HttpDelete("{id}")]
+        [HttpDelete("{id:int}")]
         public IActionResult DeletaCinema(int id)
         {
-            Cinema cinema = _context.Cinemas.FirstOrDefault(cinema => cinema.Id == id);
+            var cinema = _context.Cinemas.FirstOrDefault(cinema => cinema.Id == id);
             if (cinema == null)
             {
                 return NotFound();
