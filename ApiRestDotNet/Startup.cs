@@ -32,6 +32,7 @@ namespace ApiRestDotNet
             services.AddScoped<FilmeService, FilmeService>();
             services.AddScoped<CinemaService, CinemaService>();
             services.AddScoped<EnderecoService, EnderecoService>();
+            services.AddScoped<SessaoService, SessaoService>();
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {

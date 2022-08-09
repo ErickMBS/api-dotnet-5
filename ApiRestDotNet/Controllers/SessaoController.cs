@@ -1,10 +1,6 @@
-using System.Threading.Tasks;
-using ApiRestDotNet.Data;
 using ApiRestDotNet.Data.Dtos.Sessao;
-using ApiRestDotNet.Models;
-using AutoMapper;
+using ApiRestDotNet.Services;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace ApiRestDotNet.Controllers
 {
@@ -12,33 +8,26 @@ namespace ApiRestDotNet.Controllers
     [Route("[controller]")]
     public class SessaoController : ControllerBase
     {
-        private readonly AppDbContext _context;
-        private readonly IMapper _mapper;
+        private SessaoService _sessaoService;
 
-        public SessaoController(AppDbContext context, IMapper mapper)
+        public SessaoController(SessaoService sessaoService)
         {
-            _context = context;
-            _mapper = mapper;
+            _sessaoService = sessaoService;
         }
 
         [HttpPost]
         public IActionResult AdicionaSessao(CreateSessaoDto dto)
         {
-            var sessao = _mapper.Map<Sessao>(dto);
-            _context.Sessoes.Add(sessao);
-            _context.SaveChanges();
-            return CreatedAtAction(nameof(RecuperaSessaoPorId), new {Id = sessao.Id}, sessao);
+            var readDto = _sessaoService.AdicionaSessao(dto);
+            return CreatedAtAction(nameof(RecuperaSessoesPorId), new { Id = readDto.Id }, readDto);
         }
 
-        [HttpGet("{id:int}")]
-        public async Task<IActionResult> RecuperaSessaoPorId(int id)
+        [HttpGet("{id}")]
+        public IActionResult RecuperaSessoesPorId(int id)
         {
-            var sessao = await _context.Sessoes.FirstOrDefaultAsync(s => s.Id == id);
-            if (sessao == default)
-                return NotFound();
-
-            var sessaoDto = _mapper.Map<ReadSessaoDto>(sessao);
-            return Ok(sessaoDto);
+            var readDto = _sessaoService.RecuperaSessoesPorId(id);
+            if (readDto == null) return NotFound();
+            return Ok(readDto);
         }
         
     }
