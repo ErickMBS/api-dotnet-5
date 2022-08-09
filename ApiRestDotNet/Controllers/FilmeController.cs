@@ -1,10 +1,5 @@
-using System.Collections.Generic;
-using System.Linq;
-using ApiRestDotNet.Data;
 using ApiRestDotNet.Data.Dtos;
-using ApiRestDotNet.Models;
 using ApiRestDotNet.Services;
-using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ApiRestDotNet.Controllers
