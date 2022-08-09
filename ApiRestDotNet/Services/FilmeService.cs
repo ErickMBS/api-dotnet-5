@@ -4,6 +4,7 @@ using ApiRestDotNet.Data;
 using ApiRestDotNet.Data.Dtos;
 using ApiRestDotNet.Models;
 using AutoMapper;
+using FluentResults;
 
 namespace ApiRestDotNet.Services
 {
@@ -55,22 +56,24 @@ namespace ApiRestDotNet.Services
             return filmeDto;
         }
 
-        public void AtualizaFilme(int id, UpdateFilmeDto filmeDto)
+        public Result AtualizaFilme(int id, UpdateFilmeDto filmeDto)
         {
             var filme = _context.Filmes.FirstOrDefault(f => f.Id == id);
             if (filme == null)
-                return;
+                return Result.Fail("Filme não encontrado");
             _mapper.Map(filmeDto, filme);
             _context.SaveChanges();
+            return Result.Ok();
         }
 
-        public void DeletaFilme(int id)
+        public Result DeletaFilme(int id)
         {
             var filme = _context.Filmes.FirstOrDefault(f => f.Id == id);
             if (filme == null)
-                return;
+                return Result.Fail("Filme não encontrado");
             _context.Remove(filme);
             _context.SaveChanges();
+            return Result.Ok();
         }
     }
 }

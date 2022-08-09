@@ -44,14 +44,18 @@ namespace ApiRestDotNet.Controllers
         [HttpPut("{id:int}")]
         public IActionResult AtualizaFilme(int id, [FromBody]UpdateFilmeDto filmeDto)
         {
-            _filmeService.AtualizaFilme(id, filmeDto);
+            var resultado = _filmeService.AtualizaFilme(id, filmeDto);
+            if (resultado.IsFailed)
+                return NotFound();
             return NoContent();
         }
 
         [HttpDelete("{id:int}")]
         public IActionResult DeletaFilme(int id)
         {
-            _filmeService.DeletaFilme(id);
+            var resultado = _filmeService.DeletaFilme(id);
+            if (resultado.IsFailed)
+                return NotFound();
             return NoContent();
         }
     }
