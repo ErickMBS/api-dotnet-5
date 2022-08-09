@@ -1,5 +1,6 @@
 using System;
 using ApiRestDotNet.Data;
+using ApiRestDotNet.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -28,6 +29,9 @@ namespace ApiRestDotNet
                     Configuration.GetConnectionString("FilmeConnection")
                 )
             );
+            services.AddScoped<FilmeService, FilmeService>();
+            services.AddScoped<CinemaService, CinemaService>();
+            services.AddScoped<EnderecoService, EnderecoService>();
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
