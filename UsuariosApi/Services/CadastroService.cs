@@ -1,8 +1,9 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
 using AutoMapper;
 using FluentResults;
 using Microsoft.AspNetCore.Identity;
 using UsuariosApi.Data.Dtos;
+using UsuariosApi.Data.Requests;
 using UsuariosApi.Models;
 
 namespace UsuariosApi.Services
@@ -33,6 +34,18 @@ namespace UsuariosApi.Services
             
             return Result.Fail("Falha ao cadastrar usuário");
 
+        }
+
+        public Result AtivaContaUsuario(AtivaContaRequest request)
+        {
+            var identityUser = _userManager.Users.FirstOrDefault(u => u.Id == request.UsuarioId);
+            var identityResult = _userManager
+                .ConfirmEmailAsync(identityUser, request.CodigoDeAtivacao)
+                .Result;
+            
+            return identityResult.Succeeded 
+                ? Result.Ok() 
+                : Result.Fail("Falha na ativação do usuário");
         }
     }
 }
