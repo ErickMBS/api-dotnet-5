@@ -29,8 +29,9 @@ namespace UsuariosApi
                 .AddIdentity<IdentityUser<int>, IdentityRole<int>>(
                     opt => opt.SignIn.RequireConfirmedEmail = true
                 )
-                .AddEntityFrameworkStores<UserDbContext>();
-            
+                .AddEntityFrameworkStores<UserDbContext>()
+                .AddDefaultTokenProviders();
+
             services.AddControllers();
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             
