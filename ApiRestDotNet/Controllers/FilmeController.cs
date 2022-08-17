@@ -1,5 +1,6 @@
 using ApiRestDotNet.Data.Dtos;
 using ApiRestDotNet.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ApiRestDotNet.Controllers
@@ -16,6 +17,7 @@ namespace ApiRestDotNet.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "admin")]
         public IActionResult AdicionaFilme([FromBody] CreateFilmeDto filmeDto)
         {
             var readDto = _filmeService.AdicionaFilme(filmeDto);
