@@ -25,6 +25,7 @@ namespace ApiRestDotNet.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "admin, regular")]
         public IActionResult RecuperaFilmes([FromQuery] int? classificacaoEtaria = null)
         {
             var readDto = _filmeService.RecuperaFilmes(classificacaoEtaria);
