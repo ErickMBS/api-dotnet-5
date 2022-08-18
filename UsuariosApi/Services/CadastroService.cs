@@ -36,9 +36,6 @@ namespace UsuariosApi.Services
             var resultadoIdentity = _userManager
                 .CreateAsync(usuarioIdentity, createDto.Password);
 
-            var createRoleResult = _roleManager.CreateAsync(new IdentityRole<int>("admin")).Result;
-            var usuarioRoleResult = _userManager.AddToRoleAsync(usuarioIdentity, "admin").Result;
-
             if (!resultadoIdentity.Result.Succeeded)
                 return Result.Fail("Falha ao cadastrar usuário");
             
