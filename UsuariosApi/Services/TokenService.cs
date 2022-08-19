@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -16,7 +17,8 @@ namespace UsuariosApi.Services
             {
                 new("username", usuario.UserName),
                 new("id", usuario.Id.ToString()),
-                new(ClaimTypes.Role, role)
+                new(ClaimTypes.Role, role),
+                new(ClaimTypes.DateOfBirth, usuario.DataNascimento.ToString(CultureInfo.InvariantCulture))
             };
 
             var chave = new SymmetricSecurityKey(
