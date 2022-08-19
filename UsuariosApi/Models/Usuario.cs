@@ -1,3 +1,4 @@
+using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace UsuariosApi.Models
@@ -9,5 +10,7 @@ namespace UsuariosApi.Models
         public string Username { get; set; }
         [Required]
         public string Email { get; set; }
+
+        public DateTime DataNascimento { get; set; }
     }
 }

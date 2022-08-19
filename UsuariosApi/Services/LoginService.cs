@@ -8,10 +8,10 @@ namespace UsuariosApi.Services
 {
     public class LoginService
     {
-        private SignInManager<IdentityUser<int>> _signInManager;
+        private SignInManager<CustomIdentityUser> _signInManager;
         private TokenService _tokenService;
 
-        public LoginService(SignInManager<IdentityUser<int>> signInManager,
+        public LoginService(SignInManager<CustomIdentityUser> signInManager,
             TokenService tokenService)
         {
             _signInManager = signInManager;
@@ -66,7 +66,7 @@ namespace UsuariosApi.Services
                 : Result.Fail("Falha ao redefinir a senha!");
         }
 
-        private IdentityUser<int> RecuperaUsuarioPorEmail(string email)
+        private CustomIdentityUser RecuperaUsuarioPorEmail(string email)
         {
             var identityUser = _signInManager
                 .UserManager
